@@ -31,9 +31,9 @@ const callbacks = {
     // onDataChannelClosed: (remotePeerId: string) => {
     //     toast.info(`Data ch closed with ${remotePeerId}`);
     // },
-    onDataChannelError: (remotePeerId: string, error: any) => {
-        toast.error(`Data ch error with ${remotePeerId}: ${error.message}`);
-    },
+    // onDataChannelError: (remotePeerId: string, error: any) => {
+    //     toast.error(`Data ch error with ${remotePeerId}: ${error.message}`);
+    // },
     onFileTransferComplete: (file: File, senderId: string) => {
         toast.success(`Received file ${file.name} from ${senderId}`);
     },
