@@ -4,7 +4,7 @@ PeerBeam is a lightweight file transfer web app, built with SvelteKit, for fast,
 
 ## Deployment
 
-This project is live on Vercel—check it out [here!](https://peerbeam.vercel.app).
+This project is live on Vercel—check it out [here!](https://peerbeam.vercel.app)
 
 ## How It Works
 
