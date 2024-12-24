@@ -2,7 +2,7 @@ import type { FileTransfer } from '$lib';
 import Peer from 'peerjs';
 import type { DataConnection } from 'peerjs';
 import download from 'js-file-download';
-import { readFileContent } from '../helpers';
+import { readFileContent } from './helpers';
 
 
 interface WebRTCCallbacks {

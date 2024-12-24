@@ -1,6 +1,6 @@
 import WebRTC from "./webrtc";
 import { toast } from "svoast";
-import { generatePeerID } from "../helpers";
+import { generatePeerID } from "./helpers";
 import type { Peer } from "$lib";
 
 export const peerId: { value: string | undefined } = $state({ value: undefined });
