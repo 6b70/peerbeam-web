@@ -63,7 +63,7 @@
         </div>
 
         <div class="share-method">
-            <p>Or share your peer name to connect.</p>
+            <p>Or share your peer ID to connect.</p>
             <div class="peer-id">
                 <span>{peerId.value}</span>
                 <button onclick={copyPeerID} title="Copy code">

@@ -12,7 +12,7 @@
 
     function handleJoin() {
         if (!shareCode) {
-            toast.error("Please enter a valid share code");
+            toast.error("Please enter a valid peer ID");
         } else {
             toast.success("Joining room...", { duration: 1500 });
             onJoin(shareCode);
@@ -28,12 +28,12 @@
 
         <div class="join-content">
             <h2>Join Room</h2>
-            <p>Enter the share code to connect</p>
+            <p>Enter the peer ID shared by the other device</p>
 
             <div class="code-input">
                 <input
                     type="text"
-                    placeholder="Enter share code"
+                    placeholder="Enter peer ID"
                     bind:value={shareCode}
                     onkeydown={(e) => e.key === "Enter" && handleJoin()}
                 />
