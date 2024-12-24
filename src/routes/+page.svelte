@@ -8,6 +8,17 @@
 	import { sineInOut } from "svelte/easing";
 	import Peers from "$lib/components/Peers.svelte";
 	import type { Peer } from "$lib";
+	import { page } from "$app/state";
+
+	import { onMount } from "svelte";
+	import {
+		setupWebRTC,
+		closeWebRTC,
+		peerId,
+		sendFile,
+		connectedPeers,
+		connectToPeer,
+	} from "$lib/peerManager.svelte";
 
 	let showConnect = $state(false);
 	let showJoin = $state(false);
@@ -23,33 +34,54 @@
 	}
 
 	function onJoin(shareCode: string) {
-		console.log(shareCode);
+		connectToPeer(shareCode);
 	}
 
-	let selectedPeers = $state(new Set<string>());
-
-	const peers: Peer[] = $state([
-		{ id: "1", name: "Alice", state: "connected" },
-		{ id: "2", name: "Bob", state: "disconnected" },
-		{ id: "3", name: "Charlie", state: "connected" },
-		{ id: "4", name: "David", state: "connected" },
-		{ id: "5", name: "Eve", state: "connected" },
-	]);
+	let selectedPeer: string | null = $state(null);
 
 	function onPeerClick(peer: Peer) {
-		if (selectedPeers.has(peer.id)) {
-			selectedPeers.delete(peer.id);
-		} else {
-			selectedPeers.add(peer.id);
-		}
-		// Triggers svelte reactivity
-		selectedPeers = new Set(selectedPeers);
+		selectedPeer = peer.id;
+		fileSelection();
 	}
+
+	function fileSelection() {
+		const input = document.createElement("input");
+		input.type = "file";
+		input.multiple = true;
+		input.onchange = (event: Event) => {
+			const target = event.target as HTMLInputElement;
+			const files = target.files;
+			if (files) {
+				beginTransfer(Array.from(files));
+			}
+		};
+		input.click();
+	}
+
+	async function beginTransfer(files: File[]) {
+		if (!selectedPeer) return;
+		const recipient = selectedPeer;
+
+		for (const file of files) {
+			await sendFile(recipient, file);
+		}
+		selectedPeer = null;
+	}
+
+	onMount(() => {
+		setupWebRTC();
+		const code = page.url.searchParams.get("code");
+		if (code) {
+			setInterval(() => {
+				onJoin(code);
+			}, 1000);
+		}
+		return closeWebRTC;
+	});
 </script>
 
 <Header {onShareClick} {onJoinClick} />
-
-<Peers {peers} {onPeerClick} {selectedPeers} />
+<Peers {connectedPeers} {onPeerClick} {selectedPeer} />
 
 {#if showConnect}
 	<div transition:fade={{ duration: 300, easing: sineInOut }}>
@@ -67,7 +99,7 @@
 	<div class="user-info">
 		<CircleUserRound size={70} color="#4285F4" />
 		<div>
-			You are known as <span id="user-name">User</span>
+			You are known as <span id="user-name">{peerId.value}</span>
 		</div>
 	</div>
 </div>

@@ -2,6 +2,7 @@
     import { X, Users, Link, Copy, Check } from "lucide-svelte";
     import SvgQR from "@svelte-put/qr/svg/QR.svelte";
     import logo from "$lib/assets/logo.svg";
+    import { peerId } from "$lib/peerManager.svelte";
 
     interface Props {
         onClose: () => void;
@@ -11,20 +12,26 @@
     let copiedCode = $state(false);
     let copiedLink = $state(false);
 
-    const shareCode = "ABC123";
-
-    function copyShareCode() {
+    function copyPeerID() {
+        if (!peerId.value) return;
         copiedCode = true;
-        navigator.clipboard.writeText(shareCode);
+        navigator.clipboard.writeText(peerId.value);
+        setInterval(() => {
+            copiedCode = false;
+        }, 1500);
     }
 
     function createShareLink(): string {
-        return `${window.location.origin}?code=${shareCode}`;
+        if (!peerId.value) return "";
+        return `${window.location.origin}?code=${peerId.value}`;
     }
 
     function copyShareLink() {
         copiedLink = true;
         navigator.clipboard.writeText(createShareLink());
+        setInterval(() => {
+            copiedLink = false;
+        }, 1500);
     }
 </script>
 
@@ -33,30 +40,11 @@
         <button class="close-button" onclick={onClose}>
             <X size={26} />
         </button>
-        <div class="share-method lan">
-            <Users size={26} />
-            <span>LAN Discovery</span>
-            <p>
-                People on your network can find you automatically or <br /> connect
-                via
-            </p>
-        </div>
-
-        <div class="share-method code">
-            <div class="code-display">
-                <span>{shareCode}</span>
-                <button onclick={copyShareCode} title="Copy code">
-                    {#if copiedCode}
-                        <Check size={20} />
-                    {:else}
-                        <Copy size={20} />
-                    {/if}
-                </button>
-            </div>
-            <p>Share this code to connect</p>
-        </div>
+        <Users size={26} />
+        <span>Peer Discovery</span>
 
         <div class="share-method link">
+            <p>Copy this URL and send it to the other device.</p>
             <button onclick={copyShareLink} class="link-button">
                 {#if copiedLink}
                     <Check size={20} />
@@ -65,12 +53,27 @@
                 {/if}
                 <span>Copy share link</span>
             </button>
-            <p>Send a direct link to connect</p>
         </div>
 
-        <div class="share-method qr-code">
-            <SvgQR data={createShareLink()} {logo} />
-            <p>Scan QR code to connect</p>
+        <div class="share-method">
+            <p>Or scan the QR code from the other device.</p>
+            <div class="qr-code">
+                <SvgQR data={createShareLink()} {logo} />
+            </div>
+        </div>
+
+        <div class="share-method">
+            <p>Or share your peer name to connect.</p>
+            <div class="peer-id">
+                <span>{peerId.value}</span>
+                <button onclick={copyPeerID} title="Copy code">
+                    {#if copiedCode}
+                        <Check size={20} />
+                    {:else}
+                        <Copy size={20} />
+                    {/if}
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -116,7 +119,7 @@
         font-size: 0.9rem;
     }
 
-    .code-display {
+    .peer-id {
         display: flex;
         align-items: center;
         gap: 8px;
@@ -162,5 +165,13 @@
 
     .close-button {
         align-self: flex-end;
+    }
+
+    .qr-code {
+        width: 180px;
+    }
+
+    .link {
+        margin-top: 10px;
     }
 </style>

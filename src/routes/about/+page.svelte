@@ -1,6 +1,6 @@
 <script lang="ts">
     import AboutHeader from "$lib/components/AboutHeader.svelte";
-    import { Radar, HelpCircle, Mail, Bug } from "lucide-svelte";
+    import { Radar, Mail, Bug } from "lucide-svelte";
     import { SiGithub } from "@icons-pack/svelte-simple-icons";
     import FloatingCircles from "$lib/components/FloatingCircles.svelte";
 </script>
@@ -39,14 +39,6 @@
             >
                 <Bug size={24} color="#666" />
             </a>
-            <!-- <a
-                href="https://github.com/6b70/peerbeam-web#readme"
-                target="_blank"
-                rel="noreferrer"
-                title="Frequently Asked Questions"
-            >
-                <HelpCircle size={24} color="#666" />
-            </a> -->
             <a href="mailto:krish6b@icloud.com" title="Contact Me">
                 <Mail size={24} color="#666" />
             </a>

@@ -3,29 +3,29 @@
     import { Monitor } from "lucide-svelte";
 
     interface Props {
-        peers: Peer[];
+        connectedPeers: { value: Peer[] };
         onPeerClick: (peer: Peer) => void;
-        selectedPeers: Set<string>;
+        selectedPeer: string | null;
     }
-    let { peers, onPeerClick, selectedPeers }: Props = $props();
+    let { connectedPeers, onPeerClick, selectedPeer }: Props = $props();
 
     let peerPositions = $derived(
-        peers.map((_, index) => {
-            const angle = (2 * Math.PI * index) / peers.length;
+        connectedPeers.value.map((_, index) => {
+            const angle = (2 * Math.PI * index) / connectedPeers.value.length;
             return angle;
         }),
     );
 </script>
 
 <div class="peers-container">
-    {#each peers as peer, i}
+    {#each connectedPeers.value as peer, i}
         <div
             class="peer-wrapper"
             style="transform: rotate({peerPositions[i]}rad) translateY(-200px);"
         >
             <button
                 onclick={() => onPeerClick(peer)}
-                class:selected-peer={selectedPeers.has(peer.id)}
+                class:selected-peer={selectedPeer === peer.id}
                 class="peer"
                 style="transform: rotate(-{peerPositions[i]}rad);"
             >
@@ -33,11 +33,10 @@
                 <div class="peer-info">
                     <div
                         class="peer-status"
-                        class:connected={peer.state === "connected" ||
-                            peer.state === "transferring"}
-                        class:disconnected={peer.state === "disconnected"}
+                        class:connected={!peer.isTransferring}
+                        class:transferring={peer.isTransferring}
                     ></div>
-                    <span class="peer-name">{peer.name}</span>
+                    <span class="peer-name">{peer.id}</span>
                 </div>
             </button>
         </div>
@@ -79,8 +78,8 @@
         background: #28a745;
     }
 
-    .peer-status.disconnected {
-        background: #dc3545;
+    .peer-status.transferring {
+        background: #007bff;
     }
 
     .peer {
@@ -89,7 +88,9 @@
         padding: 12px;
         border-radius: 12px;
         transition: background-color 0.2s ease;
-        pointer-events: all;
+        display: flex;
+        align-items: center;
+        flex-direction: column;
     }
 
     .selected-peer {
