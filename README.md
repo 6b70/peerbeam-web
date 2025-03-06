@@ -2,6 +2,8 @@
 
 PeerBeam is a lightweight file transfer web app, built with SvelteKit, for fast, secure, and direct device-to-device file sharing through WebRTC. A signaling server is used for initial connection setup, but file transfer occurs directly between devices.
 
+Looking for the CLI version? Check out [PeerBeam CLI](https://github.com/6b70/peerbeam).
+
 ## Deployment
 
 This project is live on Vercel—check it out [here!](https://peerbeam.vercel.app)
