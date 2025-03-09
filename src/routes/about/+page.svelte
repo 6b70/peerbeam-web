@@ -39,7 +39,7 @@
             >
                 <Bug size={24} color="#666" />
             </a>
-            <a href="mailto:krish6b@icloud.com" title="Contact Me">
+            <a href="mailto:kspatel8@protonmail.com" title="Contact Me">
                 <Mail size={24} color="#666" />
             </a>
         </div>
